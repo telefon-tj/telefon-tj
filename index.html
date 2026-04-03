@@ -83,7 +83,6 @@
         .card-image {
             width: 100%;
             height: 200px;
-            object-fit: cover;
             background: #f0f0f0;
             display: flex;
             align-items: center;
@@ -178,16 +177,6 @@
             width: 100%;
             box-sizing: border-box;
         }
-        .load-more {
-            background: white;
-            border: 1px solid #ddd;
-            padding: 12px;
-            border-radius: 40px;
-            text-align: center;
-            margin-top: 20px;
-            cursor: pointer;
-            font-weight: 500;
-        }
         .footer {
             text-align: center;
             margin-top: 32px;
@@ -234,13 +223,12 @@
 </div>
 
 <div id="detailModal" class="modal">
-    <button class="close-modal" id="closeDetailModal">&times;</button>
+    <button class="close-modal">&times;</button>
     <div id="detailContent" class="detail-modal"></div>
 </div>
 
 <script>
-    // ========== НАСТРОЙКИ ==========
-    // ВАЖНО: Замените на ваш новый токен!
+    // ФИНАЛЬНАЯ ВЕРСИЯ - ИСПОЛЬЗУЕМ ТОКЕН ДЛЯ ФОТО
     const API_KEY = 'patuc3yVGvXmjcoqW.6288dfee172a2c8780b9b83a67f978462770dc596fd1cf1125ba4479709c3cc6';
     const BASE_ID = 'appeumJ4BWyCED34c';
     const TABLE_NAME = encodeURIComponent('объявления');
@@ -256,50 +244,41 @@
         container.innerHTML = '<div class="loading">📡 Загрузка объявлений...</div>';
         
         try {
-            const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?pageSize=100`, {
+            const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?pageSize=100`;
+            const response = await fetch(url, {
                 headers: { 'Authorization': `Bearer ${API_KEY}` }
             });
             const data = await response.json();
             
-            if (data.records) {
-                processRecords(data.records);
+            if (data.records && data.records.length > 0) {
+                allRecords = data.records;
+                
+                // Собираем категории
+                allRecords.forEach(record => {
+                    const cat = record.fields['Тип товара'];
+                    if (cat && cat !== 'Все') categoriesSet.add(cat);
+                });
+                
+                updateFilters();
+                filterAndRender();
             } else {
-                container.innerHTML = '<div class="loading">Ошибка загрузки данных</div>';
+                container.innerHTML = '<div class="loading">Нет объявлений</div>';
             }
         } catch (error) {
             console.error('Ошибка:', error);
-            container.innerHTML = '<div class="loading">Ошибка соединения</div>';
+            container.innerHTML = '<div class="loading">Ошибка загрузки. Проверьте интернет.</div>';
         }
-    }
-    
-    function processRecords(records) {
-        allRecords = records;
-        
-        // Собираем уникальные категории
-        categoriesSet.clear();
-        allRecords.forEach(record => {
-            const category = record.fields['Тип товара'];
-            if (category && category !== 'Все') {
-                categoriesSet.add(category);
-            }
-        });
-        
-        updateFilters();
-        filterAndRender();
     }
     
     function getPhotoUrl(photoField) {
         if (!photoField) return null;
         
-        // Если это массив с объектами Airtable
+        // Airtable возвращает массив объектов с полем url
         if (Array.isArray(photoField) && photoField.length > 0) {
-            const first = photoField[0];
-            if (first && first.url) return first.url;
-            if (typeof first === 'string') return first;
+            if (photoField[0] && photoField[0].url) {
+                return photoField[0].url;
+            }
         }
-        
-        // Если это строка
-        if (typeof photoField === 'string') return photoField;
         
         return null;
     }
@@ -353,9 +332,12 @@
             const title = fields['Название'] || 'Без названия';
             const city = fields['Город'] || 'Город не указан';
             
-            const imageHtml = photoUrl 
-                ? `<img src="${photoUrl}" alt="${escapeHtml(title)}" loading="lazy">` 
-                : `<div class="image-placeholder">📷 Нет фото</div>`;
+            let imageHtml;
+            if (photoUrl) {
+                imageHtml = `<img src="${photoUrl}" alt="${escapeHtml(title)}" loading="lazy">`;
+            } else {
+                imageHtml = `<div class="image-placeholder">📷 Фото не загружено</div>`;
+            }
             
             return `
                 <div class="card" data-id="${record.id}">
@@ -369,7 +351,7 @@
             `;
         }).join('');
         
-        // Обработчики кликов
+        // Клик по карточке
         document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('click', (e) => {
                 const id = card.dataset.id;
@@ -378,6 +360,7 @@
             });
         });
         
+        // Клик по фото для увеличения
         document.querySelectorAll('.card-image img').forEach(img => {
             img.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -389,7 +372,7 @@
     function showDetails(record) {
         const fields = record.fields;
         
-        // Собираем все фото
+        // Все фото
         let photosHtml = '';
         const photos = fields['Фото'];
         if (photos && Array.isArray(photos) && photos.length > 0) {
@@ -450,7 +433,6 @@
         });
     });
     
-    // Запуск
     loadData();
 </script>
 </body>
