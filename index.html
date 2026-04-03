@@ -87,6 +87,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
         .card-image img {
             width: 100%;
@@ -228,212 +229,221 @@
 </div>
 
 <script>
-    // ФИНАЛЬНАЯ ВЕРСИЯ - ИСПОЛЬЗУЕМ ТОКЕН ДЛЯ ФОТО
-    const API_KEY = 'patuc3yVGvXmjcoqW.6288dfee172a2c8780b9b83a67f978462770dc596fd1cf1125ba4479709c3cc6';
-    const BASE_ID = 'appeumJ4BWyCED34c';
-    const TABLE_NAME = encodeURIComponent('объявления');
-    
-    let allRecords = [];
-    let filteredRecords = [];
-    let currentCategory = 'Все';
-    let currentSearch = '';
-    let categoriesSet = new Set();
-    
-    async function loadData() {
-        const container = document.getElementById('listingsContainer');
-        container.innerHTML = '<div class="loading">📡 Загрузка объявлений...</div>';
+    (function() {
+        // ========== НАСТРОЙКИ ==========
+        const API_KEY = 'patuc3yVGvXmjcoqW.6288dfee172a2c8780b9b83a67f978462770dc596fd1cf1125ba4479709c3cc6';
+        const BASE_ID = 'appeumJ4BWyCED34c';
+        const TABLE_NAME = encodeURIComponent('объявления');
         
-        try {
-            const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?pageSize=100`;
-            const response = await fetch(url, {
-                headers: { 'Authorization': `Bearer ${API_KEY}` }
-            });
-            const data = await response.json();
+        let allRecords = [];
+        let filteredRecords = [];
+        let currentCategory = 'Все';
+        let currentSearch = '';
+        let categoriesSet = new Set();
+        
+        // Функция получения URL фото из Airtable
+        function getImageUrl(attachment) {
+            if (!attachment) return null;
+            if (typeof attachment === 'string') return attachment;
+            if (attachment.url) return attachment.url;
+            if (Array.isArray(attachment) && attachment.length > 0) {
+                if (attachment[0].url) return attachment[0].url;
+                if (typeof attachment[0] === 'string') return attachment[0];
+            }
+            return null;
+        }
+        
+        async function loadData() {
+            const container = document.getElementById('listingsContainer');
+            container.innerHTML = '<div class="loading">📡 Загрузка...</div>';
             
-            if (data.records && data.records.length > 0) {
-                allRecords = data.records;
-                
-                // Собираем категории
-                allRecords.forEach(record => {
-                    const cat = record.fields['Тип товара'];
-                    if (cat && cat !== 'Все') categoriesSet.add(cat);
+            try {
+                const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?pageSize=100`;
+                const response = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${API_KEY}` }
                 });
+                const data = await response.json();
                 
-                updateFilters();
-                filterAndRender();
-            } else {
-                container.innerHTML = '<div class="loading">Нет объявлений</div>';
-            }
-        } catch (error) {
-            console.error('Ошибка:', error);
-            container.innerHTML = '<div class="loading">Ошибка загрузки. Проверьте интернет.</div>';
-        }
-    }
-    
-    function getPhotoUrl(photoField) {
-        if (!photoField) return null;
-        
-        // Airtable возвращает массив объектов с полем url
-        if (Array.isArray(photoField) && photoField.length > 0) {
-            if (photoField[0] && photoField[0].url) {
-                return photoField[0].url;
-            }
-        }
-        
-        return null;
-    }
-    
-    function updateFilters() {
-        const container = document.getElementById('filterContainer');
-        const categories = ['Все', ...Array.from(categoriesSet).sort()];
-        
-        container.innerHTML = categories.map(cat => 
-            `<button class="filter-btn ${currentCategory === cat ? 'active' : ''}" data-category="${cat}">${escapeHtml(cat)}</button>`
-        ).join('');
-        
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                currentCategory = btn.dataset.category;
-                filterAndRender();
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            });
-        });
-    }
-    
-    function filterAndRender() {
-        if (!allRecords.length) return;
-        
-        filteredRecords = allRecords.filter(record => {
-            const category = record.fields['Тип товара'] || 'Без категории';
-            if (currentCategory !== 'Все' && category !== currentCategory) return false;
-            
-            const title = (record.fields['Название'] || '').toLowerCase();
-            const search = currentSearch.toLowerCase();
-            if (search && !title.includes(search)) return false;
-            
-            return true;
-        });
-        
-        renderCards();
-    }
-    
-    function renderCards() {
-        const container = document.getElementById('listingsContainer');
-        if (!filteredRecords.length) {
-            container.innerHTML = '<div class="loading">📭 Объявлений не найдено</div>';
-            return;
-        }
-        
-        container.innerHTML = filteredRecords.map(record => {
-            const fields = record.fields;
-            const photoUrl = getPhotoUrl(fields['Фото']);
-            const price = fields['Цена'] ? `${fields['Цена'].toLocaleString()} сомони` : 'Цена не указана';
-            const title = fields['Название'] || 'Без названия';
-            const city = fields['Город'] || 'Город не указан';
-            
-            let imageHtml;
-            if (photoUrl) {
-                imageHtml = `<img src="${photoUrl}" alt="${escapeHtml(title)}" loading="lazy">`;
-            } else {
-                imageHtml = `<div class="image-placeholder">📷 Фото не загружено</div>`;
-            }
-            
-            return `
-                <div class="card" data-id="${record.id}">
-                    <div class="card-image">${imageHtml}</div>
-                    <div class="card-content">
-                        <div class="card-title">${escapeHtml(title)}</div>
-                        <div class="card-price">${escapeHtml(price)}</div>
-                        <div class="card-city">📍 ${escapeHtml(city)}</div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-        
-        // Клик по карточке
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('click', (e) => {
-                const id = card.dataset.id;
-                const record = allRecords.find(r => r.id === id);
-                if (record) showDetails(record);
-            });
-        });
-        
-        // Клик по фото для увеличения
-        document.querySelectorAll('.card-image img').forEach(img => {
-            img.addEventListener('click', (e) => {
-                e.stopPropagation();
-                openImageModal(img.src);
-            });
-        });
-    }
-    
-    function showDetails(record) {
-        const fields = record.fields;
-        
-        // Все фото
-        let photosHtml = '';
-        const photos = fields['Фото'];
-        if (photos && Array.isArray(photos) && photos.length > 0) {
-            photosHtml = '<div style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">';
-            photos.forEach(photo => {
-                if (photo && photo.url) {
-                    photosHtml += `<img src="${photo.url}" style="width:100%; border-radius:12px; cursor:pointer;" onclick="openImageModal('${photo.url}')">`;
+                if (data.records && data.records.length > 0) {
+                    allRecords = data.records;
+                    
+                    // Отладка: выводим первое фото в консоль
+                    if (allRecords.length > 0 && allRecords[0].fields['Фото']) {
+                        console.log('Пример фото:', allRecords[0].fields['Фото']);
+                    }
+                    
+                    // Собираем категории
+                    allRecords.forEach(record => {
+                        const cat = record.fields['Тип товара'];
+                        if (cat && cat !== 'Все') categoriesSet.add(cat);
+                    });
+                    
+                    updateFilters();
+                    filterAndRender();
+                } else {
+                    container.innerHTML = '<div class="loading">Нет объявлений</div>';
                 }
-            });
-            photosHtml += '</div>';
-        } else {
-            photosHtml = '<div style="background:#f0f0f0; padding:40px; text-align:center; border-radius:12px; margin-bottom:16px;">📷 Фото отсутствуют</div>';
+            } catch (error) {
+                console.error('Ошибка:', error);
+                container.innerHTML = '<div class="loading">Ошибка загрузки</div>';
+            }
         }
         
-        const price = fields['Цена'] ? `${fields['Цена'].toLocaleString()} сомони` : 'Не указана';
-        const phone = fields['Контакт'] || 'Не указан';
-        const phoneLink = phone !== 'Не указан' ? `<a href="tel:${phone}" class="detail-phone">📞 Позвонить: ${phone}</a>` : `<div class="detail-phone" style="background:#ccc">📞 Телефон не указан</div>`;
+        function updateFilters() {
+            const container = document.getElementById('filterContainer');
+            const categories = ['Все', ...Array.from(categoriesSet).sort()];
+            
+            container.innerHTML = categories.map(cat => 
+                `<button class="filter-btn ${currentCategory === cat ? 'active' : ''}" data-category="${cat}">${escapeHtml(cat)}</button>`
+            ).join('');
+            
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentCategory = btn.dataset.category;
+                    filterAndRender();
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+        }
         
-        const detailHtml = `
-            <h2 style="margin-bottom:8px">${escapeHtml(fields['Название'] || 'Без названия')}</h2>
-            <div style="font-size:24px; font-weight:bold; color:#e67e22; margin-bottom:12px">${escapeHtml(price)}</div>
-            <div style="margin-bottom:8px"><strong>📍 ${escapeHtml(fields['Город'] || 'Город не указан')}</strong></div>
-            <div style="margin-bottom:8px"><strong>📂 ${escapeHtml(fields['Тип товара'] || 'Категория не указана')}</strong></div>
-            <div style="margin-bottom:16px; white-space:pre-wrap; background:#f9f9f9; padding:12px; border-radius:12px;">${escapeHtml(fields['Описание'] || 'Описание отсутствует')}</div>
-            ${photosHtml}
-            ${phoneLink}
-        `;
+        function filterAndRender() {
+            if (!allRecords.length) return;
+            
+            filteredRecords = allRecords.filter(record => {
+                const category = record.fields['Тип товара'] || 'Без категории';
+                if (currentCategory !== 'Все' && category !== currentCategory) return false;
+                
+                const title = (record.fields['Название'] || '').toLowerCase();
+                const search = currentSearch.toLowerCase();
+                if (search && !title.includes(search)) return false;
+                
+                return true;
+            });
+            
+            renderCards();
+        }
         
-        document.getElementById('detailContent').innerHTML = detailHtml;
-        document.getElementById('detailModal').classList.add('active');
-    }
-    
-    function openImageModal(src) {
-        const modal = document.getElementById('imageModal');
-        document.getElementById('modalImage').src = src;
-        modal.classList.add('active');
-    }
-    
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
+        function renderCards() {
+            const container = document.getElementById('listingsContainer');
+            if (!filteredRecords.length) {
+                container.innerHTML = '<div class="loading">📭 Объявлений не найдено</div>';
+                return;
+            }
+            
+            container.innerHTML = filteredRecords.map(record => {
+                const fields = record.fields;
+                const photoData = fields['Фото'];
+                const photoUrl = getImageUrl(photoData);
+                const price = fields['Цена'] ? `${fields['Цена'].toLocaleString()} сомони` : 'Цена не указана';
+                const title = fields['Название'] || 'Без названия';
+                const city = fields['Город'] || 'Город не указан';
+                
+                let imageHtml;
+                if (photoUrl) {
+                    imageHtml = `<img src="${photoUrl}" alt="${escapeHtml(title)}" loading="lazy" crossorigin="anonymous">`;
+                } else {
+                    imageHtml = `<div class="image-placeholder">📷 Нет фото</div>`;
+                }
+                
+                return `
+                    <div class="card" data-id="${record.id}">
+                        <div class="card-image">${imageHtml}</div>
+                        <div class="card-content">
+                            <div class="card-title">${escapeHtml(title)}</div>
+                            <div class="card-price">${escapeHtml(price)}</div>
+                            <div class="card-city">📍 ${escapeHtml(city)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            attachEvents();
+        }
+        
+        function attachEvents() {
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    const id = card.dataset.id;
+                    const record = allRecords.find(r => r.id === id);
+                    if (record) showDetails(record);
+                });
+            });
+            
+            document.querySelectorAll('.card-image img').forEach(img => {
+                img.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (img.src) openImageModal(img.src);
+                });
+            });
+        }
+        
+        function showDetails(record) {
+            const fields = record.fields;
+            
+            let photosHtml = '';
+            const photos = fields['Фото'];
+            if (photos && Array.isArray(photos) && photos.length > 0) {
+                photosHtml = '<div style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">';
+                photos.forEach(photo => {
+                    const url = getImageUrl(photo);
+                    if (url) {
+                        photosHtml += `<img src="${url}" style="width:100%; border-radius:12px; cursor:pointer;" onclick="openImageModal('${url}')">`;
+                    }
+                });
+                photosHtml += '</div>';
+            } else {
+                photosHtml = '<div style="background:#f0f0f0; padding:40px; text-align:center; border-radius:12px; margin-bottom:16px;">📷 Фото отсутствуют</div>';
+            }
+            
+            const price = fields['Цена'] ? `${fields['Цена'].toLocaleString()} сомони` : 'Не указана';
+            const phone = fields['Контакт'] || 'Не указан';
+            const phoneLink = phone !== 'Не указан' ? `<a href="tel:${phone}" class="detail-phone">📞 Позвонить: ${phone}</a>` : `<div class="detail-phone" style="background:#ccc">📞 Телефон не указан</div>`;
+            
+            const detailHtml = `
+                <h2 style="margin-bottom:8px">${escapeHtml(fields['Название'] || 'Без названия')}</h2>
+                <div style="font-size:24px; font-weight:bold; color:#e67e22; margin-bottom:12px">${escapeHtml(price)}</div>
+                <div style="margin-bottom:8px"><strong>📍 ${escapeHtml(fields['Город'] || 'Город не указан')}</strong></div>
+                <div style="margin-bottom:8px"><strong>📂 ${escapeHtml(fields['Тип товара'] || 'Категория не указана')}</strong></div>
+                <div style="margin-bottom:16px; white-space:pre-wrap; background:#f9f9f9; padding:12px; border-radius:12px;">${escapeHtml(fields['Описание'] || 'Описание отсутствует')}</div>
+                ${photosHtml}
+                ${phoneLink}
+            `;
+            
+            document.getElementById('detailContent').innerHTML = detailHtml;
+            document.getElementById('detailModal').classList.add('active');
+        }
+        
+        window.openImageModal = function(src) {
+            const modal = document.getElementById('imageModal');
+            document.getElementById('modalImage').src = src;
+            modal.classList.add('active');
+        };
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            currentSearch = e.target.value;
+            filterAndRender();
         });
-    }
-    
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-        currentSearch = e.target.value;
-        filterAndRender();
-    });
-    
-    document.querySelectorAll('.close-modal').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.getElementById('imageModal').classList.remove('active');
-            document.getElementById('detailModal').classList.remove('active');
+        
+        document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.getElementById('imageModal').classList.remove('active');
+                document.getElementById('detailModal').classList.remove('active');
+            });
         });
-    });
-    
-    loadData();
+        
+        loadData();
+    })();
 </script>
 </body>
 </html>
