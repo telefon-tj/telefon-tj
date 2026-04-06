@@ -11,61 +11,95 @@
             box-sizing: border-box;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #f5f5f5;
-            padding: 16px;
-            color: #1a1a1a;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f8f9fc;
+            padding: 0 0 70px 0;
+            color: #1f2937;
         }
         .container {
             max-width: 600px;
             margin: 0 auto;
+            padding: 16px;
         }
-        h1 {
-            font-size: 28px;
-            text-align: center;
-            margin-bottom: 8px;
+        /* header */
+        .app-header {
+            background: white;
+            padding: 12px 16px;
+            border-bottom: 1px solid #eef2f6;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.96);
+        }
+        .header-inner {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
             color: #1e3a5f;
         }
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 24px;
+        .add-btn-header {
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 600;
             font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
+        /* фильтры */
         .filters {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 20px;
-            justify-content: center;
+            margin: 16px 0;
         }
-        .filter-btn {
-            background: #fff;
-            border: 1px solid #ddd;
+        .filter-chip {
+            background: white;
+            border: 1px solid #e2e8f0;
             padding: 8px 16px;
-            border-radius: 30px;
+            border-radius: 40px;
             font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
-            font-family: inherit;
         }
-        .filter-btn.active {
+        .filter-chip.active {
             background: #1e3a5f;
             color: white;
             border-color: #1e3a5f;
         }
-        .search-box {
+        /* поиск и сортировка */
+        .search-sort {
+            display: flex;
+            gap: 12px;
             margin-bottom: 20px;
         }
-        .search-box input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            font-size: 16px;
+        .search-box {
+            flex: 1;
             background: white;
-            font-family: inherit;
+            border: 1px solid #e2e8f0;
+            border-radius: 48px;
+            padding: 12px 16px;
+            font-size: 15px;
         }
+        .sort-select {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 48px;
+            padding: 0 16px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        /* карточки */
         .listings {
             display: flex;
             flex-direction: column;
@@ -73,11 +107,11 @@
         }
         .card {
             background: white;
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            transition: transform 0.1s, box-shadow 0.2s;
             cursor: pointer;
-            transition: transform 0.1s;
         }
         .card:active {
             transform: scale(0.98);
@@ -85,19 +119,11 @@
         .card-image {
             width: 100%;
             height: 200px;
-            background: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        .card-image img {
-            width: 100%;
-            height: 100%;
             object-fit: cover;
+            background: #f1f5f9;
         }
         .card-content {
-            padding: 12px;
+            padding: 12px 14px;
         }
         .card-title {
             font-size: 16px;
@@ -112,9 +138,12 @@
         }
         .card-city {
             font-size: 13px;
-            color: #666;
+            color: #5b6e8c;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
-        /* Модальное окно для увеличения фото */
+        /* модалки */
         .modal {
             display: none;
             position: fixed;
@@ -122,7 +151,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.96);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -138,9 +167,7 @@
         .modal-content img {
             max-width: 100%;
             max-height: 80vh;
-            display: block;
-            margin: 0 auto;
-            border-radius: 8px;
+            border-radius: 16px;
         }
         .close-modal {
             position: absolute;
@@ -151,320 +178,282 @@
             cursor: pointer;
             background: none;
             border: none;
-            font-family: monospace;
         }
-        /* Модальное окно для деталей */
         .detail-modal {
             background: white;
             max-width: 500px;
             width: 90%;
             max-height: 90%;
             overflow-y: auto;
-            border-radius: 20px;
+            border-radius: 28px;
             padding: 20px;
-            position: relative;
-        }
-        .detail-modal img {
-            width: 100%;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            cursor: pointer;
         }
         .detail-phone {
             display: inline-block;
             background: #25D366;
             color: white;
-            padding: 12px 20px;
-            border-radius: 40px;
+            padding: 14px 20px;
+            border-radius: 60px;
             text-decoration: none;
             font-weight: bold;
-            margin-top: 16px;
-            text-align: center;
             width: 100%;
-            box-sizing: border-box;
+            text-align: center;
+            margin-top: 20px;
+        }
+        /* форма */
+        .form-modal {
+            background: white;
+            max-width: 500px;
+            width: 90%;
+            border-radius: 28px;
+            padding: 24px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 15px;
+        }
+        .submit-btn {
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 40px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+        }
+        /* нижняя панель */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid #eef2f6;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 16px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            z-index: 20;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: #64748b;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .nav-item.active {
+            color: #1e3a5f;
+            font-weight: 600;
         }
         .footer {
             text-align: center;
-            margin-top: 32px;
-            font-size: 12px;
-            color: #999;
-        }
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-        .image-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f0f0f0;
-            color: #999;
-            font-size: 14px;
-        }
-        .detail-header {
-            margin-bottom: 16px;
-        }
-        .detail-price {
-            font-size: 24px;
-            font-weight: bold;
-            color: #e67e22;
-            margin-bottom: 12px;
-        }
-        .detail-info {
-            margin-bottom: 8px;
-        }
-        .detail-description {
-            margin: 16px 0;
-            white-space: pre-wrap;
-            background: #f9f9f9;
-            padding: 12px;
-            border-radius: 12px;
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 24px;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>Telefon.tj</h1>
-    <div class="subtitle">Доска объявлений Таджикистана</div>
 
+<div class="app-header">
+    <div class="header-inner">
+        <div class="logo">Telefon.tj</div>
+        <button class="add-btn-header" id="headerAddBtn">➕ Подать</button>
+    </div>
+</div>
+
+<div class="container">
     <div class="filters" id="filterContainer"></div>
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Поиск по названию...">
+    <div class="search-sort">
+        <input type="text" id="searchInput" class="search-box" placeholder="Поиск по названию">
+        <select id="sortSelect" class="sort-select">
+            <option value="price_asc">💰 Сначала дешёвые</option>
+            <option value="price_desc">💰 Сначала дорогие</option>
+        </select>
     </div>
-    <div id="listingsContainer" class="listings">
-        <div class="loading">📡 Загрузка объявлений...</div>
-    </div>
+    <div id="listingsContainer" class="listings">📡 Загрузка объявлений...</div>
     <div class="footer">© 2026 Telefon.tj</div>
 </div>
 
-<!-- Модальное окно для увеличения фото -->
-<div id="imageModal" class="modal">
-    <button class="close-modal" onclick="closeImageModal()">&times;</button>
-    <div class="modal-content">
-        <img id="modalImage" src="">
-    </div>
+<div class="bottom-nav">
+    <button class="nav-item active" data-nav="home">🏠 Главная</button>
+    <button class="nav-item" data-nav="add">➕ Добавить</button>
+    <button class="nav-item" data-nav="favorites">❤️ Избранное</button>
+    <button class="nav-item" data-nav="profile">👤 Профиль</button>
 </div>
 
-<!-- Модальное окно для деталей -->
-<div id="detailModal" class="modal">
-    <button class="close-modal" onclick="closeDetailModal()">&times;</button>
-    <div id="detailContent" class="detail-modal"></div>
-</div>
+<!-- модалки -->
+<div id="imageModal" class="modal"><button class="close-modal">&times;</button><div class="modal-content"><img id="modalImage" src=""></div></div>
+<div id="detailModal" class="modal"><button class="close-modal">&times;</button><div id="detailContent" class="detail-modal"></div></div>
+<div id="formModal" class="modal"><div class="form-modal" id="formContent"></div></div>
 
 <script>
-    // ========== НАСТРОЙКИ Airtable ==========
-    // ВАЖНО: Замените на ваш API ключ (можно создать новый в Airtable Account -> Developer)
-    const API_KEY = 'patuc3yVGvXmjcoqW.6288dfee172a2c8780b9b83a67f978462770dc596fd1cf1125ba4479709c3cc6';
-    const BASE_ID = 'appeumJ4BWyCED34c';
-    const TABLE_NAME = encodeURIComponent('объявления');
+    // ========== КОНФИГУРАЦИЯ ==========
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR7vZquog8vihv8JDE-ySyB3BmFXYlUwmmw5IzfERQfdx1zt7JrIpwwcas55_ZBlL8emeZsx_RcEshgaE/pub?output=csv';
     
-    let allRecords = [];
-    let filteredRecords = [];
+    let allAds = [];
+    let filteredAds = [];
     let currentCategory = 'Все';
-    let currentSearch = '';
     let categoriesSet = new Set();
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     
-    // Функция получения URL фото из Airtable
-    function getImageUrl(photoField) {
-        if (!photoField) return null;
-        if (typeof photoField === 'string') return photoField;
-        if (photoField.url) return photoField.url;
-        if (Array.isArray(photoField) && photoField.length > 0) {
-            if (photoField[0] && photoField[0].url) return photoField[0].url;
-            if (typeof photoField[0] === 'string') return photoField[0];
-        }
-        return null;
-    }
-    
+    // загрузка CSV
     async function loadData() {
-        const container = document.getElementById('listingsContainer');
-        container.innerHTML = '<div class="loading">📡 Загрузка объявлений...</div>';
-        
         try {
-            const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?pageSize=100`;
-            const response = await fetch(url, {
-                headers: { 'Authorization': `Bearer ${API_KEY}` }
-            });
-            const data = await response.json();
-            
-            if (data.records && data.records.length > 0) {
-                allRecords = data.records;
-                
-                // Собираем уникальные категории
-                allRecords.forEach(record => {
-                    const cat = record.fields['Тип товара'];
-                    if (cat && cat !== 'Все') categoriesSet.add(cat);
-                });
-                
-                updateFilters();
-                filterAndRender();
-            } else {
-                container.innerHTML = '<div class="loading">Нет объявлений</div>';
-            }
-        } catch (error) {
-            console.error('Ошибка загрузки:', error);
-            container.innerHTML = '<div class="loading">❌ Ошибка загрузки. Проверьте интернет.</div>';
+            const response = await fetch(CSV_URL);
+            const csvText = await response.text();
+            parseCSV(csvText);
+        } catch(e) {
+            document.getElementById('listingsContainer').innerHTML = '<div class="loading">❌ Ошибка загрузки данных</div>';
         }
     }
     
-    function updateFilters() {
+    function parseCSV(csv) {
+        const rows = csv.split('\n').filter(row => row.trim());
+        if (rows.length < 2) return;
+        const headers = rows[0].split(',').map(h => h.replace(/["']/g, '').trim());
+        allAds = [];
+        for (let i=1; i<rows.length; i++) {
+            const values = rows[i].split(',').map(v => v.replace(/["']/g, '').trim());
+            let ad = {};
+            headers.forEach((h, idx) => { ad[h] = values[idx] || ''; });
+            if (ad['Название'] && ad['Название'].length > 0) allAds.push(ad);
+        }
+        // собрать категории
+        categoriesSet.clear();
+        allAds.forEach(ad => {
+            let cat = ad['Тип товара'];
+            if (cat && cat !== 'Все') categoriesSet.add(cat);
+        });
+        updateFiltersUI();
+        filterAndRender();
+    }
+    
+    function updateFiltersUI() {
         const container = document.getElementById('filterContainer');
-        const categories = ['Все', ...Array.from(categoriesSet).sort()];
-        
-        container.innerHTML = categories.map(cat => 
-            `<button class="filter-btn ${currentCategory === cat ? 'active' : ''}" data-category="${cat}">${escapeHtml(cat)}</button>`
-        ).join('');
-        
-        document.querySelectorAll('.filter-btn').forEach(btn => {
+        const cats = ['Все', ...Array.from(categoriesSet).sort()];
+        container.innerHTML = cats.map(cat => `<button class="filter-chip ${currentCategory===cat?'active':''}" data-cat="${cat}">${cat}</button>`).join('');
+        document.querySelectorAll('.filter-chip').forEach(btn => {
             btn.addEventListener('click', () => {
-                currentCategory = btn.dataset.category;
+                currentCategory = btn.dataset.cat;
                 filterAndRender();
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
             });
         });
     }
     
     function filterAndRender() {
-        if (!allRecords.length) return;
-        
-        filteredRecords = allRecords.filter(record => {
-            const category = record.fields['Тип товара'] || 'Без категории';
-            if (currentCategory !== 'Все' && category !== currentCategory) return false;
-            
-            const title = (record.fields['Название'] || '').toLowerCase();
-            const search = currentSearch.toLowerCase();
-            if (search && !title.includes(search)) return false;
-            
+        let searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        let sortType = document.getElementById('sortSelect').value;
+        filteredAds = allAds.filter(ad => {
+            if (currentCategory !== 'Все' && ad['Тип товара'] !== currentCategory) return false;
+            let title = (ad['Название'] || '').toLowerCase();
+            if (searchTerm && !title.includes(searchTerm)) return false;
             return true;
         });
-        
+        // сортировка
+        if (sortType === 'price_asc') filteredAds.sort((a,b) => (parseFloat(a['Цена'])||0) - (parseFloat(b['Цена'])||0));
+        if (sortType === 'price_desc') filteredAds.sort((a,b) => (parseFloat(b['Цена'])||0) - (parseFloat(a['Цена'])||0));
         renderCards();
+    }
+    
+    function getFirstPhoto(photoStr) {
+        if (!photoStr) return null;
+        let urls = photoStr.split(',').map(s => s.trim());
+        return urls[0] || null;
     }
     
     function renderCards() {
         const container = document.getElementById('listingsContainer');
-        if (!filteredRecords.length) {
-            container.innerHTML = '<div class="loading">📭 Объявлений не найдено</div>';
-            return;
-        }
-        
-        container.innerHTML = filteredRecords.map(record => {
-            const fields = record.fields;
-            const photoUrl = getImageUrl(fields['Фото']);
-            const price = fields['Цена'] ? `${fields['Цена'].toLocaleString()} сомони` : 'Цена не указана';
-            const title = fields['Название'] || 'Без названия';
-            const city = fields['Город'] || 'Город не указан';
-            
-            let imageHtml;
-            if (photoUrl) {
-                imageHtml = `<img src="${photoUrl}" alt="${escapeHtml(title)}" loading="lazy">`;
-            } else {
-                imageHtml = `<div class="image-placeholder">📷 Нет фото</div>`;
-            }
-            
-            return `
-                <div class="card" data-id="${record.id}">
-                    <div class="card-image">${imageHtml}</div>
-                    <div class="card-content">
-                        <div class="card-title">${escapeHtml(title)}</div>
-                        <div class="card-price">${escapeHtml(price)}</div>
-                        <div class="card-city">📍 ${escapeHtml(city)}</div>
-                    </div>
-                </div>
-            `;
+        if (!filteredAds.length) { container.innerHTML = '<div class="loading">📭 Объявлений не найдено</div>'; return; }
+        container.innerHTML = filteredAds.map(ad => {
+            let photo = getFirstPhoto(ad['Фото']) || 'https://placehold.co/400x300?text=No+Image';
+            let price = ad['Цена'] ? `${Number(ad['Цена']).toLocaleString()} сомони` : 'Цена не указана';
+            return `<div class="card" data-id="${ad.id||Math.random()}">
+                        <img class="card-image" src="${photo}" loading="lazy" onerror="this.src='https://placehold.co/400x300?text=Фото+не+загружено'">
+                        <div class="card-content">
+                            <div class="card-title">${escapeHtml(ad['Название']||'Без названия')}</div>
+                            <div class="card-price">${escapeHtml(price)}</div>
+                            <div class="card-city">📍 ${escapeHtml(ad['Город']||'Город не указан')}</div>
+                        </div>
+                    </div>`;
         }).join('');
-        
-        attachCardEvents();
-    }
-    
-    function attachCardEvents() {
         document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('click', (e) => {
-                const id = card.dataset.id;
-                const record = allRecords.find(r => r.id === id);
-                if (record) showDetails(record);
+                let id = card.dataset.id;
+                let ad = filteredAds.find(a => (a.id||Math.random()).toString() === id);
+                if(ad) showDetail(ad);
             });
         });
-        
-        document.querySelectorAll('.card-image img').forEach(img => {
-            img.addEventListener('click', (e) => {
-                e.stopPropagation();
-                openImageModal(img.src);
-            });
+        document.querySelectorAll('.card-image').forEach(img => {
+            img.addEventListener('click', (e) => { e.stopPropagation(); openImageModal(img.src); });
         });
     }
     
-    function showDetails(record) {
-        const fields = record.fields;
-        
-        // Все фото
+    function showDetail(ad) {
+        let photos = ad['Фото'] ? ad['Фото'].split(',').map(s=>s.trim()) : [];
         let photosHtml = '';
-        const photos = fields['Фото'];
-        if (photos && Array.isArray(photos) && photos.length > 0) {
-            photosHtml = '<div style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">';
-            photos.forEach(photo => {
-                const url = getImageUrl(photo);
-                if (url) {
-                    photosHtml += `<img src="${url}" style="width:100%; border-radius:12px; cursor:pointer;" onclick="openImageModal('${url}')">`;
-                }
-            });
-            photosHtml += '</div>';
-        } else {
-            photosHtml = '<div style="background:#f0f0f0; padding:40px; text-align:center; border-radius:12px; margin-bottom:16px;">📷 Фото отсутствуют</div>';
-        }
-        
-        const price = fields['Цена'] ? `${fields['Цена'].toLocaleString()} сомони` : 'Не указана';
-        const phone = fields['Контакт'] || 'Не указан';
-        const phoneLink = phone !== 'Не указан' ? `<a href="tel:${phone}" class="detail-phone">📞 Позвонить: ${phone}</a>` : `<div class="detail-phone" style="background:#ccc">📞 Телефон не указан</div>`;
-        
-        const detailHtml = `
-            <h2>${escapeHtml(fields['Название'] || 'Без названия')}</h2>
-            <div class="detail-price">${escapeHtml(price)}</div>
-            <div class="detail-info"><strong>📍 ${escapeHtml(fields['Город'] || 'Город не указан')}</strong></div>
-            <div class="detail-info"><strong>📂 ${escapeHtml(fields['Тип товара'] || 'Категория не указана')}</strong></div>
-            <div class="detail-description">${escapeHtml(fields['Описание'] || 'Описание отсутствует')}</div>
-            ${photosHtml}
-            ${phoneLink}
-        `;
-        
+        photos.forEach(url => { if(url) photosHtml += `<img src="${url}" style="width:100%; border-radius:16px; margin-bottom:12px; cursor:pointer" onclick="openImageModal('${url}')">`; });
+        if(!photosHtml) photosHtml = '<div style="background:#f1f5f9; padding:32px; text-align:center; border-radius:20px;">📷 Фото отсутствуют</div>';
+        let price = ad['Цена'] ? `${Number(ad['Цена']).toLocaleString()} сомони` : 'Не указана';
+        let phone = ad['Контакт'] || 'Не указан';
+        let phoneLink = phone !== 'Не указан' ? `<a href="tel:${phone}" class="detail-phone">📞 Позвонить: ${phone}</a>` : `<div class="detail-phone" style="background:#ccc">📞 Телефон не указан</div>`;
+        let detailHtml = `<h2>${escapeHtml(ad['Название'])}</h2>
+                          <div style="font-size:24px; font-weight:700; color:#e67e22; margin:8px 0">${escapeHtml(price)}</div>
+                          <div><strong>📍 ${escapeHtml(ad['Город']||'—')}</strong> &nbsp;| 📂 ${escapeHtml(ad['Тип товара']||'—')}</div>
+                          <div style="margin:16px 0; background:#f8fafc; padding:12px; border-radius:20px;">${escapeHtml(ad['Описание']||'Описание отсутствует')}</div>
+                          ${photosHtml}
+                          ${phoneLink}`;
         document.getElementById('detailContent').innerHTML = detailHtml;
         document.getElementById('detailModal').classList.add('active');
     }
     
-    function openImageModal(src) {
-        const modal = document.getElementById('imageModal');
-        document.getElementById('modalImage').src = src;
-        modal.classList.add('active');
+    function openImageModal(src) { document.getElementById('modalImage').src = src; document.getElementById('imageModal').classList.add('active'); }
+    function closeModals() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); }
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+    
+    document.getElementById('searchInput').addEventListener('input', () => filterAndRender());
+    document.getElementById('sortSelect').addEventListener('change', () => filterAndRender());
+    document.querySelectorAll('.close-modal').forEach(btn => btn.addEventListener('click', closeModals));
+    
+    // форма добавления (локально пока)
+    function showAddForm() {
+        let formHtml = `<h2 style="margin-bottom:16px">➕ Новое объявление</h2>
+                        <div class="form-group"><input type="text" id="adTitle" placeholder="Название"></div>
+                        <div class="form-group"><input type="number" id="adPrice" placeholder="Цена (сомони)"></div>
+                        <div class="form-group"><input type="text" id="adCategory" placeholder="Категория (Авто, Телефоны...)"></div>
+                        <div class="form-group"><input type="text" id="adCity" placeholder="Город"></div>
+                        <div class="form-group"><textarea id="adDesc" rows="3" placeholder="Описание"></textarea></div>
+                        <div class="form-group"><input type="text" id="adPhoto" placeholder="Ссылка на фото (URL)"></div>
+                        <div class="form-group"><input type="tel" id="adPhone" placeholder="Телефон"></div>
+                        <button class="submit-btn" id="saveAdBtn">Опубликовать</button>`;
+        document.getElementById('formContent').innerHTML = formHtml;
+        document.getElementById('formModal').classList.add('active');
+        document.getElementById('saveAdBtn').onclick = () => {
+            alert('✅ Объявление добавлено (демо-режим). В реальной версии данные сохранятся в Google Sheets.');
+            closeModals();
+        };
     }
     
-    function closeImageModal() {
-        document.getElementById('imageModal').classList.remove('active');
-    }
+    document.getElementById('headerAddBtn').addEventListener('click', showAddForm);
+    document.querySelectorAll('[data-nav="add"]').forEach(btn => btn.addEventListener('click', showAddForm));
+    document.querySelectorAll('.nav-item').forEach(btn => btn.addEventListener('click', function() { if(this.dataset.nav === 'home') location.reload(); else if(this.dataset.nav === 'favorites') alert('❤️ Избранное появится после регистрации'); else if(this.dataset.nav === 'profile') alert('👤 Профиль будет после внедрения Supabase'); }));
     
-    function closeDetailModal() {
-        document.getElementById('detailModal').classList.remove('active');
-    }
-    
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-    
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-        currentSearch = e.target.value;
-        filterAndRender();
-    });
-    
-    // Запуск загрузки данных
     loadData();
 </script>
 </body>
