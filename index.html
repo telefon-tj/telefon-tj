@@ -10,140 +10,180 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #f8f9fc;
-            padding: 0 0 70px 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f5f7fb;
             color: #1f2937;
         }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 16px;
-        }
-        /* header */
-        .app-header {
+
+        /* шапка */
+        .header {
             background: white;
-            padding: 12px 16px;
-            border-bottom: 1px solid #eef2f6;
+            border-bottom: 1px solid #e5e7eb;
             position: sticky;
             top: 0;
-            z-index: 10;
-            backdrop-filter: blur(10px);
-            background: rgba(255,255,255,0.96);
+            z-index: 100;
+            padding: 12px 24px;
         }
-        .header-inner {
-            max-width: 600px;
+
+        .header-container {
+            max-width: 1280px;
             margin: 0 auto;
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 16px;
         }
+
         .logo {
-            font-size: 22px;
-            font-weight: 700;
-            color: #1e3a5f;
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1e3a5f, #2c5282);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
-        .add-btn-header {
+
+        .add-button {
             background: #1e3a5f;
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 10px 24px;
             border-radius: 40px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 15px;
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transition: background 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
+
+        .add-button:hover {
+            background: #2c5282;
+        }
+
+        /* основной контент */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
         /* фильтры */
-        .filters {
+        .filters-section {
+            background: white;
+            border-radius: 20px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .filter-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin: 16px 0;
+            gap: 12px;
+            margin-bottom: 16px;
         }
+
         .filter-chip {
-            background: white;
-            border: 1px solid #e2e8f0;
-            padding: 8px 16px;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            padding: 8px 20px;
             border-radius: 40px;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
         }
+
         .filter-chip.active {
             background: #1e3a5f;
             color: white;
             border-color: #1e3a5f;
         }
-        /* поиск и сортировка */
+
         .search-sort {
             display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .search-box {
-            flex: 1;
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 48px;
-            padding: 12px 16px;
-            font-size: 15px;
-        }
-        .sort-select {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 48px;
-            padding: 0 16px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        /* карточки */
-        .listings {
-            display: flex;
-            flex-direction: column;
             gap: 16px;
+            flex-wrap: wrap;
         }
-        .card {
+
+        .search-input {
+            flex: 2;
+            padding: 12px 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 40px;
+            font-size: 15px;
             background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-            transition: transform 0.1s, box-shadow 0.2s;
+        }
+
+        .sort-select {
+            flex: 1;
+            padding: 12px 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 40px;
+            background: white;
+            font-size: 14px;
             cursor: pointer;
         }
-        .card:active {
-            transform: scale(0.98);
+
+        /* сетка карточек */
+        .listings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
         }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+
         .card-image {
             width: 100%;
             height: 200px;
             object-fit: cover;
-            background: #f1f5f9;
+            background: #f3f4f6;
         }
+
         .card-content {
-            padding: 12px 14px;
+            padding: 14px;
         }
+
         .card-title {
             font-size: 16px;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            line-height: 1.4;
         }
+
         .card-price {
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 20px;
+            font-weight: 800;
             color: #e67e22;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
+
         .card-city {
             font-size: 13px;
-            color: #5b6e8c;
+            color: #6b7280;
             display: flex;
             align-items: center;
             gap: 4px;
         }
-        /* модалки */
+
+        /* модальные окна */
         .modal {
             display: none;
             position: fixed;
@@ -151,24 +191,28 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.96);
+            background: rgba(0,0,0,0.85);
             z-index: 1000;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
+
         .modal.active {
             display: flex;
         }
+
         .modal-content {
             max-width: 90%;
             max-height: 90%;
         }
+
         .modal-content img {
             max-width: 100%;
             max-height: 80vh;
-            border-radius: 16px;
+            border-radius: 12px;
         }
+
         .close-modal {
             position: absolute;
             top: 20px;
@@ -179,281 +223,265 @@
             background: none;
             border: none;
         }
+
         .detail-modal {
             background: white;
-            max-width: 500px;
+            max-width: 550px;
             width: 90%;
             max-height: 90%;
             overflow-y: auto;
-            border-radius: 28px;
-            padding: 20px;
+            border-radius: 24px;
+            padding: 24px;
         }
+
         .detail-phone {
             display: inline-block;
-            background: #25D366;
+            background: #25d366;
             color: white;
-            padding: 14px 20px;
+            padding: 14px 24px;
             border-radius: 60px;
             text-decoration: none;
             font-weight: bold;
-            width: 100%;
             text-align: center;
+            width: 100%;
             margin-top: 20px;
+            font-size: 18px;
         }
-        /* форма */
-        .form-modal {
-            background: white;
-            max-width: 500px;
-            width: 90%;
-            border-radius: 28px;
-            padding: 24px;
-        }
-        .form-group {
-            margin-bottom: 16px;
-        }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            font-size: 15px;
-        }
-        .submit-btn {
-            background: #1e3a5f;
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 40px;
-            font-weight: bold;
-            width: 100%;
-            cursor: pointer;
-        }
-        /* нижняя панель */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255,255,255,0.96);
-            backdrop-filter: blur(12px);
-            border-top: 1px solid #eef2f6;
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 16px 20px;
-            max-width: 600px;
-            margin: 0 auto;
-            z-index: 20;
-        }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            font-size: 12px;
-            color: #64748b;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-        .nav-item.active {
-            color: #1e3a5f;
-            font-weight: 600;
-        }
+
         .footer {
             text-align: center;
-            font-size: 11px;
-            color: #94a3b8;
-            margin-top: 24px;
+            padding: 24px;
+            color: #9ca3af;
+            font-size: 13px;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            font-size: 18px;
+            color: #6b7280;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 16px;
+            }
+            .listings-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="app-header">
-    <div class="header-inner">
+<div class="header">
+    <div class="header-container">
         <div class="logo">Telefon.tj</div>
-        <button class="add-btn-header" id="headerAddBtn">➕ Подать</button>
+        <button class="add-button" id="addBtn">➕ Подать объявление</button>
     </div>
 </div>
 
 <div class="container">
-    <div class="filters" id="filterContainer"></div>
-    <div class="search-sort">
-        <input type="text" id="searchInput" class="search-box" placeholder="Поиск по названию">
-        <select id="sortSelect" class="sort-select">
-            <option value="price_asc">💰 Сначала дешёвые</option>
-            <option value="price_desc">💰 Сначала дорогие</option>
-        </select>
+    <div class="filters-section">
+        <div class="filter-group" id="filterContainer"></div>
+        <div class="search-sort">
+            <input type="text" id="searchInput" class="search-input" placeholder="Поиск по названию">
+            <select id="sortSelect" class="sort-select">
+                <option value="date_desc">📅 Сначала новые</option>
+                <option value="price_asc">💰 Сначала дешёвые</option>
+                <option value="price_desc">💰 Сначала дорогие</option>
+            </select>
+        </div>
     </div>
-    <div id="listingsContainer" class="listings">📡 Загрузка объявлений...</div>
-    <div class="footer">© 2026 Telefon.tj</div>
+
+    <div id="listingsContainer" class="listings-grid">
+        <div class="loading">📡 Загрузка объявлений...</div>
+    </div>
+    <div class="footer">© 2026 Telefon.tj — доска объявлений Таджикистана</div>
 </div>
 
-<div class="bottom-nav">
-    <button class="nav-item active" data-nav="home">🏠 Главная</button>
-    <button class="nav-item" data-nav="add">➕ Добавить</button>
-    <button class="nav-item" data-nav="favorites">❤️ Избранное</button>
-    <button class="nav-item" data-nav="profile">👤 Профиль</button>
+<div id="imageModal" class="modal">
+    <button class="close-modal">&times;</button>
+    <div class="modal-content"><img id="modalImage" src=""></div>
 </div>
 
-<!-- модалки -->
-<div id="imageModal" class="modal"><button class="close-modal">&times;</button><div class="modal-content"><img id="modalImage" src=""></div></div>
-<div id="detailModal" class="modal"><button class="close-modal">&times;</button><div id="detailContent" class="detail-modal"></div></div>
-<div id="formModal" class="modal"><div class="form-modal" id="formContent"></div></div>
+<div id="detailModal" class="modal">
+    <button class="close-modal">&times;</button>
+    <div id="detailContent" class="detail-modal"></div>
+</div>
 
 <script>
-    // ========== КОНФИГУРАЦИЯ ==========
+    // === ТВОЯ CSV-ССЫЛКА (замени на свою, если надо) ===
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR7vZquog8vihv8JDE-ySyB3BmFXYlUwmmw5IzfERQfdx1zt7JrIpwwcas55_ZBlL8emeZsx_RcEshgaE/pub?output=csv';
-    
-    let allAds = [];
-    let filteredAds = [];
+
+    let allItems = [];
+    let filteredItems = [];
     let currentCategory = 'Все';
-    let categoriesSet = new Set();
-    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-    
+    let categories = new Set();
+
     // загрузка CSV
     async function loadData() {
         try {
-            const response = await fetch(CSV_URL);
-            const csvText = await response.text();
-            parseCSV(csvText);
+            const res = await fetch(CSV_URL);
+            const text = await res.text();
+            parseCSV(text);
         } catch(e) {
             document.getElementById('listingsContainer').innerHTML = '<div class="loading">❌ Ошибка загрузки данных</div>';
         }
     }
-    
+
     function parseCSV(csv) {
-        const rows = csv.split('\n').filter(row => row.trim());
+        const rows = csv.split('\n').filter(r => r.trim());
         if (rows.length < 2) return;
         const headers = rows[0].split(',').map(h => h.replace(/["']/g, '').trim());
-        allAds = [];
-        for (let i=1; i<rows.length; i++) {
+        allItems = [];
+        for (let i = 1; i < rows.length; i++) {
             const values = rows[i].split(',').map(v => v.replace(/["']/g, '').trim());
-            let ad = {};
-            headers.forEach((h, idx) => { ad[h] = values[idx] || ''; });
-            if (ad['Название'] && ad['Название'].length > 0) allAds.push(ad);
+            let obj = {};
+            headers.forEach((h, idx) => { obj[h] = values[idx] || ''; });
+            if (obj['Название']) allItems.push(obj);
         }
-        // собрать категории
-        categoriesSet.clear();
-        allAds.forEach(ad => {
-            let cat = ad['Тип товара'];
-            if (cat && cat !== 'Все') categoriesSet.add(cat);
+        categories.clear();
+        allItems.forEach(item => {
+            let cat = item['Тип товара'];
+            if (cat && cat !== 'Все') categories.add(cat);
         });
-        updateFiltersUI();
+        renderFilters();
         filterAndRender();
     }
-    
-    function updateFiltersUI() {
+
+    function renderFilters() {
         const container = document.getElementById('filterContainer');
-        const cats = ['Все', ...Array.from(categoriesSet).sort()];
-        container.innerHTML = cats.map(cat => `<button class="filter-chip ${currentCategory===cat?'active':''}" data-cat="${cat}">${cat}</button>`).join('');
+        const cats = ['Все', ...Array.from(categories).sort()];
+        container.innerHTML = cats.map(cat => `<button class="filter-chip ${currentCategory === cat ? 'active' : ''}" data-cat="${cat}">${cat}</button>`).join('');
         document.querySelectorAll('.filter-chip').forEach(btn => {
             btn.addEventListener('click', () => {
                 currentCategory = btn.dataset.cat;
+                renderFilters();
                 filterAndRender();
-                document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
             });
         });
     }
-    
+
     function filterAndRender() {
-        let searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        let sortType = document.getElementById('sortSelect').value;
-        filteredAds = allAds.filter(ad => {
-            if (currentCategory !== 'Все' && ad['Тип товара'] !== currentCategory) return false;
-            let title = (ad['Название'] || '').toLowerCase();
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const sortType = document.getElementById('sortSelect').value;
+
+        filteredItems = allItems.filter(item => {
+            if (currentCategory !== 'Все' && item['Тип товара'] !== currentCategory) return false;
+            const title = (item['Название'] || '').toLowerCase();
             if (searchTerm && !title.includes(searchTerm)) return false;
             return true;
         });
+
         // сортировка
-        if (sortType === 'price_asc') filteredAds.sort((a,b) => (parseFloat(a['Цена'])||0) - (parseFloat(b['Цена'])||0));
-        if (sortType === 'price_desc') filteredAds.sort((a,b) => (parseFloat(b['Цена'])||0) - (parseFloat(a['Цена'])||0));
+        if (sortType === 'price_asc') filteredItems.sort((a,b) => (parseFloat(a['Цена'])||0) - (parseFloat(b['Цена'])||0));
+        if (sortType === 'price_desc') filteredItems.sort((a,b) => (parseFloat(b['Цена'])||0) - (parseFloat(a['Цена'])||0));
+        if (sortType === 'date_desc') filteredItems.sort((a,b) => (b['Created at'] || '').localeCompare(a['Created at'] || ''));
+
         renderCards();
     }
-    
+
     function getFirstPhoto(photoStr) {
         if (!photoStr) return null;
-        let urls = photoStr.split(',').map(s => s.trim());
+        const urls = photoStr.split(',').map(s => s.trim());
         return urls[0] || null;
     }
-    
+
     function renderCards() {
         const container = document.getElementById('listingsContainer');
-        if (!filteredAds.length) { container.innerHTML = '<div class="loading">📭 Объявлений не найдено</div>'; return; }
-        container.innerHTML = filteredAds.map(ad => {
-            let photo = getFirstPhoto(ad['Фото']) || 'https://placehold.co/400x300?text=No+Image';
-            let price = ad['Цена'] ? `${Number(ad['Цена']).toLocaleString()} сомони` : 'Цена не указана';
-            return `<div class="card" data-id="${ad.id||Math.random()}">
-                        <img class="card-image" src="${photo}" loading="lazy" onerror="this.src='https://placehold.co/400x300?text=Фото+не+загружено'">
-                        <div class="card-content">
-                            <div class="card-title">${escapeHtml(ad['Название']||'Без названия')}</div>
-                            <div class="card-price">${escapeHtml(price)}</div>
-                            <div class="card-city">📍 ${escapeHtml(ad['Город']||'Город не указан')}</div>
-                        </div>
-                    </div>`;
+        if (!filteredItems.length) {
+            container.innerHTML = '<div class="loading">📭 Объявлений не найдено</div>';
+            return;
+        }
+        container.innerHTML = filteredItems.map(item => {
+            const photo = getFirstPhoto(item['Фото']) || 'https://placehold.co/400x300?text=No+Image';
+            const price = item['Цена'] ? `${Number(item['Цена']).toLocaleString()} сомони` : 'Цена не указана';
+            return `
+                <div class="card" data-id="${item.id || Math.random()}">
+                    <img class="card-image" src="${photo}" loading="lazy" onerror="this.src='https://placehold.co/400x300?text=Фото+не+загружено'">
+                    <div class="card-content">
+                        <div class="card-title">${escapeHtml(item['Название'])}</div>
+                        <div class="card-price">${escapeHtml(price)}</div>
+                        <div class="card-city">📍 ${escapeHtml(item['Город'] || 'Город не указан')}</div>
+                    </div>
+                </div>
+            `;
         }).join('');
+
         document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('click', (e) => {
-                let id = card.dataset.id;
-                let ad = filteredAds.find(a => (a.id||Math.random()).toString() === id);
-                if(ad) showDetail(ad);
+                const id = card.dataset.id;
+                const item = filteredItems.find(i => (i.id || Math.random()).toString() === id);
+                if (item) showDetail(item);
             });
         });
         document.querySelectorAll('.card-image').forEach(img => {
-            img.addEventListener('click', (e) => { e.stopPropagation(); openImageModal(img.src); });
+            img.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openImageModal(img.src);
+            });
         });
     }
-    
-    function showDetail(ad) {
-        let photos = ad['Фото'] ? ad['Фото'].split(',').map(s=>s.trim()) : [];
+
+    function showDetail(item) {
+        const photos = item['Фото'] ? item['Фото'].split(',').map(s => s.trim()) : [];
         let photosHtml = '';
-        photos.forEach(url => { if(url) photosHtml += `<img src="${url}" style="width:100%; border-radius:16px; margin-bottom:12px; cursor:pointer" onclick="openImageModal('${url}')">`; });
-        if(!photosHtml) photosHtml = '<div style="background:#f1f5f9; padding:32px; text-align:center; border-radius:20px;">📷 Фото отсутствуют</div>';
-        let price = ad['Цена'] ? `${Number(ad['Цена']).toLocaleString()} сомони` : 'Не указана';
-        let phone = ad['Контакт'] || 'Не указан';
-        let phoneLink = phone !== 'Не указан' ? `<a href="tel:${phone}" class="detail-phone">📞 Позвонить: ${phone}</a>` : `<div class="detail-phone" style="background:#ccc">📞 Телефон не указан</div>`;
-        let detailHtml = `<h2>${escapeHtml(ad['Название'])}</h2>
-                          <div style="font-size:24px; font-weight:700; color:#e67e22; margin:8px 0">${escapeHtml(price)}</div>
-                          <div><strong>📍 ${escapeHtml(ad['Город']||'—')}</strong> &nbsp;| 📂 ${escapeHtml(ad['Тип товара']||'—')}</div>
-                          <div style="margin:16px 0; background:#f8fafc; padding:12px; border-radius:20px;">${escapeHtml(ad['Описание']||'Описание отсутствует')}</div>
-                          ${photosHtml}
-                          ${phoneLink}`;
-        document.getElementById('detailContent').innerHTML = detailHtml;
+        photos.forEach(url => {
+            if (url) photosHtml += `<img src="${url}" style="width:100%; border-radius:16px; margin-bottom:12px; cursor:pointer" onclick="openImageModal('${url}')">`;
+        });
+        if (!photosHtml) photosHtml = '<div style="background:#f3f4f6; padding:40px; text-align:center; border-radius:20px;">📷 Фото отсутствуют</div>';
+
+        const price = item['Цена'] ? `${Number(item['Цена']).toLocaleString()} сомони` : 'Не указана';
+        const phone = item['Контакт'] || 'Не указан';
+        const phoneLink = phone !== 'Не указан' ? `<a href="tel:${phone}" class="detail-phone">📞 Позвонить: ${phone}</a>` : `<div class="detail-phone" style="background:#9ca3af">📞 Телефон не указан</div>`;
+
+        const html = `
+            <h2 style="margin-bottom:8px">${escapeHtml(item['Название'])}</h2>
+            <div style="font-size:28px; font-weight:800; color:#e67e22; margin:8px 0">${escapeHtml(price)}</div>
+            <div style="margin:8px 0"><strong>📍 ${escapeHtml(item['Город'] || '—')}</strong>  |  📂 ${escapeHtml(item['Тип товара'] || '—')}</div>
+            <div style="margin:16px 0; background:#f9fafb; padding:16px; border-radius:20px; line-height:1.5">${escapeHtml(item['Описание'] || 'Описание отсутствует')}</div>
+            ${photosHtml}
+            ${phoneLink}
+        `;
+        document.getElementById('detailContent').innerHTML = html;
         document.getElementById('detailModal').classList.add('active');
     }
-    
-    function openImageModal(src) { document.getElementById('modalImage').src = src; document.getElementById('imageModal').classList.add('active'); }
-    function closeModals() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); }
-    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
-    
+
+    function openImageModal(src) {
+        document.getElementById('modalImage').src = src;
+        document.getElementById('imageModal').classList.add('active');
+    }
+
+    function closeModals() {
+        document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
     document.getElementById('searchInput').addEventListener('input', () => filterAndRender());
     document.getElementById('sortSelect').addEventListener('change', () => filterAndRender());
     document.querySelectorAll('.close-modal').forEach(btn => btn.addEventListener('click', closeModals));
-    
-    // форма добавления (локально пока)
-    function showAddForm() {
-        let formHtml = `<h2 style="margin-bottom:16px">➕ Новое объявление</h2>
-                        <div class="form-group"><input type="text" id="adTitle" placeholder="Название"></div>
-                        <div class="form-group"><input type="number" id="adPrice" placeholder="Цена (сомони)"></div>
-                        <div class="form-group"><input type="text" id="adCategory" placeholder="Категория (Авто, Телефоны...)"></div>
-                        <div class="form-group"><input type="text" id="adCity" placeholder="Город"></div>
-                        <div class="form-group"><textarea id="adDesc" rows="3" placeholder="Описание"></textarea></div>
-                        <div class="form-group"><input type="text" id="adPhoto" placeholder="Ссылка на фото (URL)"></div>
-                        <div class="form-group"><input type="tel" id="adPhone" placeholder="Телефон"></div>
-                        <button class="submit-btn" id="saveAdBtn">Опубликовать</button>`;
-        document.getElementById('formContent').innerHTML = formHtml;
-        document.getElementById('formModal').classList.add('active');
-        document.getElementById('saveAdBtn').onclick = () => {
-            alert('✅ Объявление добавлено (демо-режим). В реальной версии данные сохранятся в Google Sheets.');
-            closeModals();
-        };
-    }
-    
-    document.getElementById('headerAddBtn').addEventListener('click', showAddForm);
-    document.querySelectorAll('[data-nav="add"]').forEach(btn => btn.addEventListener('click', showAddForm));
-    document.querySelectorAll('.nav-item').forEach(btn => btn.addEventListener('click', function() { if(this.dataset.nav === 'home') location.reload(); else if(this.dataset.nav === 'favorites') alert('❤️ Избранное появится после регистрации'); else if(this.dataset.nav === 'profile') alert('👤 Профиль будет после внедрения Supabase'); }));
-    
+
+    document.getElementById('addBtn').addEventListener('click', () => {
+        alert('Форма добавления объявления будет готова на следующем шаге. Сейчас данные берутся из Google Sheets.');
+    });
+
     loadData();
 </script>
 </body>
